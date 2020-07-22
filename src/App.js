@@ -1,45 +1,44 @@
-import React from 'react';
+import React, { Component } from 'react';
 
-import {CardList} from './components/card-list/card-list.component.jsx';
+import { CardList } from './components/card-list/card-list.component';
+import { SearchBox } from './components/search-box/search-box.component';
 
 import './App.css';
-import {SearchBox} from './components/search-box/search-box.components'
-class App extends React.Component{
 
-constructor(){
-  super();
+class App extends Component {
+  constructor() {
+    super();
 
-  this.state={
-    monsters: [],
-    searchField: '',
-    
-  };
-}
-
-  componentDidMount(){
-    fetch('https://jsonplaceholder.typicode.com/users')
-    .then(response => response.json())
-    .then(users=> this.setState({monsters:users}));
+    this.state = {
+      monsters: [],
+      searchField: ''
+    };
   }
 
-  render(){
-    const { monsters, searchField} = this.state;
-    const filteredMonsters = monsters.filter(monster=> 
-      monster.name.toLowerCase().includes(searchField.toLowerCase()))
-     return(
-       <div className='App'>
-       <h1>Monsters Rolodex</h1>
+  componentDidMount() {
+    fetch('https://jsonplaceholder.typicode.com/users')
+      .then(response => response.json())
+      .then(users => this.setState({ monsters: users }));
+  }
 
-      <SearchBox
-        placeholder ='search monsters'
-        handleChange= {e=> this.setState({searchField:e.target.value})}
-        />
+  onSearchChange = event => {
+    this.setState({ searchField: event.target.value });
+  };
 
-       <CardList monsters = {filteredMonsters} />
-      
-       </div>
-     )
-}
+  render() {
+    const { monsters, searchField } = this.state;
+    const filteredMonsters = monsters.filter(monster =>
+      monster.name.toLowerCase().includes(searchField.toLowerCase())
+    );
+
+    return (
+      <div className='App'>
+        <h1>Monsters Rolodex</h1>
+        <SearchBox onSearchChange={this.onSearchChange} />
+        <CardList monsters={filteredMonsters} />
+      </div>
+    );
+  }
 }
 
 export default App;
